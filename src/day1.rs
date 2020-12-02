@@ -9,7 +9,7 @@ pub fn input_generator(input: &str) -> Vec<i32> {
 pub fn solve_part1(data: &[i32]) -> i32 {
     for i in 0..data.len() {
         let a = data[i];
-        if a < 2020/2 {
+        if a < 2020 / 2 {
             for j in i..data.len() {
                 let b = data[j];
                 if a + b == 2020 {
@@ -26,7 +26,7 @@ pub fn solve_part1(data: &[i32]) -> i32 {
 pub fn solve_part2(data: &[i32]) -> i32 {
     for i in 0..data.len() {
         let a = data[i];
-        if a < 2020/2 {
+        if a < 2020 / 2 {
             for j in i..data.len() {
                 let b = data[j];
                 if a + b >= 2020 {
