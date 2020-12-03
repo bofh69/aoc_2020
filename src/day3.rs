@@ -16,13 +16,11 @@ fn count_trees(data: &Data, dx: usize, dy: usize) -> usize {
     let mut x = 0;
     let mut trees = 0;
     let width = data[0].len();
-    for (y, row) in data.iter().enumerate() {
-        if y % dy == 0 {
-            if row[x] {
-                trees += 1;
-            }
-            x = (x + dx) % width;
+    for row in data.iter().step_by(dy) {
+        if row[x] {
+            trees += 1;
         }
+        x = (x + dx) % width;
     }
     trees
 }
