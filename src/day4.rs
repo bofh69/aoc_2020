@@ -2,10 +2,10 @@ use aoc_runner_derive::{aoc, aoc_generator};
 use std::collections::HashMap;
 // use ::regex::*;
 
-type Data = Vec<HashMap<String, String>>;
+type Data = HashMap<String, String>;
 
 #[aoc_generator(day4)]
-pub fn input_generator(input: &str) -> Data {
+pub fn input_generator(input: &str) -> Vec<Data> {
     input
         .split("\n\n")
         .map(|entry| {
@@ -21,7 +21,7 @@ pub fn input_generator(input: &str) -> Data {
 }
 
 #[aoc(day4, part1)]
-pub fn solve_part1(data: &Data) -> usize {
+pub fn solve_part1(data: &[Data]) -> usize {
     /*
      * byr (Birth Year)
      * iyr (Issue Year)
@@ -58,7 +58,7 @@ fn is_entry_between(entries: &HashMap<String, String>, name: &str, min: u32, max
 }
 
 #[aoc(day4, part2)]
-pub fn solve_part2(data: &Data) -> usize {
+pub fn solve_part2(data: &[Data]) -> usize {
     data.iter()
         .filter(|entries| {
             // byr (Birth Year) - four digits; at least 1920 and at most 2002.
@@ -94,7 +94,7 @@ pub fn solve_part2(data: &Data) -> usize {
         .filter(|entries| {
             // hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
             if let Some(entry) = entries.get("hcl") {
-                if entry.len() == 7 && entry.starts_with("#") {
+                if entry.len() == 7 && entry.starts_with('#') {
                     entry
                         .chars()
                         .skip(1)
