@@ -43,6 +43,6 @@ pub fn solve_part2(data: &[Data]) -> Data {
 
     (min..(1 << 10))
         .filter(|i| !data.contains(&i))
-        .nth(0)
+        .next()
         .unwrap()
 }

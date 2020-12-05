@@ -10,8 +10,7 @@ pub fn solve_part1(data: &[i32]) -> i32 {
     for i in 0..data.len() {
         let a = data[i];
         if a < 2020 / 2 {
-            for j in i..data.len() {
-                let b = data[j];
+            for b in data.iter().skip(i) {
                 if a + b == 2020 {
                     // dbg!((a, b, a * b));
                     return a * b;
@@ -32,8 +31,7 @@ pub fn solve_part2(data: &[i32]) -> i32 {
                 if a + b >= 2020 {
                     continue;
                 } else {
-                    for k in j..data.len() {
-                        let c = data[k];
+                    for c in data.iter().skip(j) {
                         if a + b + c == 2020 {
                             // dbg!((a, b, c, a * b * c));
                             return a * b * c;
