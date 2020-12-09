@@ -1,6 +1,4 @@
 use aoc_runner_derive::{aoc, aoc_generator};
-// use std::collections::HashMap;
-// use ::regex::*;
 
 type Data = usize;
 
@@ -12,22 +10,28 @@ pub fn input_generator(input: &str) -> Vec<Data> {
 #[aoc(day9, part1)]
 pub fn solve_part1(data: &[Data]) -> Data {
     const PREAMBLE: usize = 25;
-    data.iter()
-        .enumerate()
-        .skip(PREAMBLE)
-        .filter(|(i, &num)| {
-            for j in *i - PREAMBLE..*i {
-                for k in &data[j + 1..*i] {
-                    if data[j] + k == num {
-                        return false;
+    data.windows(PREAMBLE + 1)
+        .filter(|win| {
+            let result = win[PREAMBLE];
+            for i in 0..PREAMBLE {
+                let k = win[i];
+                if k < result {
+                    for j in &win[i + 1..] {
+                        let sum = k + j;
+                        if sum == result {
+                            return false;
+                        }
                     }
                 }
             }
+            // This can not be the sum of two numbers in the window,
+            // keep it.
             true
         })
-        .map(|(_, &num)| num)
+        .map(|win| win[PREAMBLE])
         .next()
         .unwrap()
+    // result: 133015568
 }
 
 #[aoc(day9, part2)]
@@ -51,4 +55,5 @@ pub fn solve_part2(data: &[Data]) -> Data {
         }
     }
     panic!("No solution found");
+    // result: 16107959
 }
