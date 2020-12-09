@@ -9,48 +9,6 @@ pub enum Data {
     Nop(i32),
 }
 
-#[aoc_generator(day8)]
-pub fn input_generator(input: &str) -> Vec<Data> {
-    input
-        .lines()
-        .map(|line| {
-            if line.starts_with("nop ") {
-                Data::Nop(0)
-            } else if line.starts_with("jmp ") {
-                let line = &line[4..];
-                let result = line.parse().unwrap();
-                Data::Jmp(result)
-            } else if line.starts_with("acc ") {
-                let line = &line[4..];
-                let result = line.parse().unwrap();
-                Data::Acc(result)
-            } else {
-                panic!("Unknown instruction")
-            }
-        })
-        .collect()
-}
-
-#[aoc(day8, part1)]
-pub fn solve_part1(data: &[Data]) -> i32 {
-    let mut pc = 0_i32;
-    let mut acc = 0_i32;
-    let mut visited = vec![false; data.len()];
-
-    while !visited[pc as usize] {
-        visited[pc as usize] = true;
-        match data[pc as usize] {
-            Data::Nop(_) => pc += 1,
-            Data::Acc(arg) => {
-                pc += 1;
-                acc += arg
-            }
-            Data::Jmp(arg) => pc += arg,
-        }
-    }
-    acc
-}
-
 fn run(data: &[Data]) -> (bool, i32) {
     let mut pc = 0_i32;
     let mut acc = 0_i32;
@@ -69,12 +27,39 @@ fn run(data: &[Data]) -> (bool, i32) {
     (pc as usize == data.len(), acc)
 }
 
+#[aoc_generator(day8)]
+pub fn input_generator(input: &str) -> Vec<Data> {
+    input
+        .lines()
+        .map(|line| {
+            if let Some(line) = line.strip_prefix("nop ") {
+                let result = line.parse().unwrap();
+                Data::Nop(result)
+            } else if let Some(line) = line.strip_prefix("jmp ") {
+                let result = line.parse().unwrap();
+                Data::Jmp(result)
+            } else if let Some(line) = line.strip_prefix("acc ") {
+                let result = line.parse().unwrap();
+                Data::Acc(result)
+            } else {
+                panic!("Unknown instruction")
+            }
+        })
+        .collect()
+}
+
 fn flip(data: &mut [Data], line: usize) {
     match data[line] {
         Data::Nop(v) => data[line] = Data::Jmp(v),
         Data::Jmp(v) => data[line] = Data::Nop(v),
         _ => (),
     }
+}
+
+#[aoc(day8, part1)]
+pub fn solve_part1(data: &[Data]) -> i32 {
+    let (_, acc) = run(data);
+    acc
 }
 
 #[aoc(day8, part2)]

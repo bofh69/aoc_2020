@@ -49,7 +49,7 @@ fn dfs(from: &str, data: &Data, goal: &str, cache: &mut HashMap<String, bool>) -
         }
     }
     cache.insert(from.into(), false);
-    return false;
+    false
 }
 
 #[aoc(day7, part1)]
@@ -58,7 +58,7 @@ pub fn solve_part1(data: &Data) -> u32 {
     let mut cache = HashMap::new();
     cache.insert(GOAL.into(), true);
     let mut count = 0;
-    for (key, _) in data {
+    for key in data.keys() {
         if key != GOAL && dfs(key, data, GOAL, &mut cache) {
             count += 1;
         }
