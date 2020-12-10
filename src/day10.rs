@@ -12,7 +12,7 @@ pub fn input_generator(input: &str) -> Vec<Data> {
 pub fn solve_part1(data: &[Data]) -> Data {
     // Sort the data, count the differences.
     let mut data: Vec<_> = data.iter().copied().collect();
-    data.sort();
+    data.sort_unstable();
     data.push(data[data.len() - 1] + 3);
 
     let mut diffs: HashMap<Data, Data> = HashMap::new();
@@ -21,8 +21,8 @@ pub fn solve_part1(data: &[Data]) -> Data {
     // at the start.
     diffs.insert(data[0], 1);
 
-    for i in 1..data.len() {
-        let diff = data[i] - data[i - 1];
+    // Could be optimized to count in two variables, but meh
+    for diff in data.windows(2).map(|win| win[1] - win[0]) {
         if let Some(val) = diffs.get_mut(&diff) {
             *val += 1;
         } else {
@@ -58,7 +58,7 @@ fn count_permutations(pos: usize, data: &[Data], cache: &mut [Data]) -> Data {
 pub fn solve_part2(data: &[Data]) -> Data {
     let mut data: Vec<_> = data.iter().copied().collect();
     data.push(0); // The wall's jolt.
-    data.sort();
+    data.sort_unstable();
     data.push(data[data.len() - 1] + 3); // The needed jolt.
     let mut cache = vec![0_usize; data.len()];
     // Last adapter can only be arranged in one way.
