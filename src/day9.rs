@@ -43,13 +43,14 @@ pub fn solve_part2(data: &[Data]) -> Data {
         let mut acc = 0;
         for j in i..data.len() {
             acc += data[j];
-            // dbg!((i, data[j], acc));
             if acc != data[j] && acc == INVALID {
-                // Found it.
+                // Found it, return the sum of the minimum and maximum
+                // in the span.
                 let data = &data[i..=j];
                 return data.iter().min().unwrap() + data.iter().max().unwrap();
             }
             if acc > INVALID {
+                // Too large, this span isn't the one we're looking for.
                 break;
             }
         }
