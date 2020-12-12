@@ -103,6 +103,7 @@ fn run_once(from: &[State], to: &mut [State], width: usize, height: usize) -> bo
     changed
 }
 
+/*
 fn print_it(data: &[State], width: usize, height: usize) {
     for y in 0..height {
         for x in 0..width {
@@ -116,6 +117,7 @@ fn print_it(data: &[State], width: usize, height: usize) {
     }
     println!("");
 }
+*/
 
 #[aoc(day11, part1)]
 pub fn solve_part1(data: &[Data]) -> usize {
@@ -126,16 +128,10 @@ pub fn solve_part1(data: &[Data]) -> usize {
 
     let mut d1 = &mut data;
     let mut d2 = &mut data2;
-    let mut generation = 1;
 
     while run_once(d1, d2, width, height) {
-        let tmp = d1;
-        d1 = d2;
-        d2 = tmp;
-        generation += 1;
+        std::mem::swap(&mut d1, &mut d2);
     }
-    println!("Generation: {}", generation);
-    // print_it(d1, width, height);
     d2.iter().filter(|&s| State::Occupied == *s).count()
 }
 
@@ -240,15 +236,9 @@ pub fn solve_part2(data: &[Data]) -> usize {
 
     let mut d1 = &mut data;
     let mut d2 = &mut data2;
-    let mut generation = 1;
 
     while run_once2(d1, d2, width, height) {
-        let tmp = d1;
-        d1 = d2;
-        d2 = tmp;
-        generation += 1;
+        std::mem::swap(&mut d1, &mut d2);
     }
-    println!("Generation: {}", generation);
-    // print_it(d1, width, height);
     d2.iter().filter(|&s| State::Occupied == *s).count()
 }
