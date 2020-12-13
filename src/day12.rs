@@ -84,7 +84,6 @@ pub fn solve_part2(data: &[Data]) -> i32 {
             },
             Inst::Forward(n) => ship = (ship.0 + n * pos.0, ship.1 + n * pos.1),
         }
-        dbg!(&(inst, pos, ship));
     }
 
     ship.0.abs() + ship.1.abs()

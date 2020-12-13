@@ -38,8 +38,7 @@ pub fn solve_part2(data: &Data) -> usize {
     let lines = &data.1;
     let mut t = 0;
     let mut cycle = lines[0].1;
-    for i in 1..lines.len() {
-        let (offset, line) = lines[i];
+    for (offset, line) in lines.iter().skip(1) {
         while (t + offset) % line != 0 {
             t += cycle;
         }

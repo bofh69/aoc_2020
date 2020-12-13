@@ -65,7 +65,7 @@ pub fn solve_part1(data: &[Data]) -> i32 {
 #[aoc(day8, part2)]
 pub fn solve_part2(data: &[Data]) -> i32 {
     let mut my_data = data.to_vec();
-    for (line, instr) in data
+    for (line, _instr) in data
         .iter()
         .enumerate()
         .filter(|(_, n)| matches!(n, Data::Nop(_) | Data::Jmp(_)))
@@ -73,7 +73,7 @@ pub fn solve_part2(data: &[Data]) -> i32 {
         flip(&mut my_data, line);
         let (res, acc) = run(&my_data);
         if res {
-            println!("Changed line {} from {:?}", line, instr);
+            // println!("Changed line {} from {:?}", line, instr);
             return acc;
         }
 
