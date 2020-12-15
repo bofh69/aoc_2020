@@ -23,7 +23,7 @@ pub fn solve_part1(data: &[Data]) -> usize {
         } else {
             last = 0;
         }
-        before = previous.get(&last).map(|&n| n);
+        before = previous.get(&last).copied();
         previous.insert(last, turn);
         dbg!(&(turn, last));
     }
@@ -31,22 +31,22 @@ pub fn solve_part1(data: &[Data]) -> usize {
 }
 
 #[aoc(day15, part2)]
-pub fn solve_part2(data: &[Data]) -> usize {
-    const GOAL: usize = 30_000_000;
-    let mut previous = vec![GOAL; GOAL];
+pub fn solve_part2(data: &[Data]) -> u32 {
+    const GOAL: u32 = 30_000_000;
+    let mut previous = vec![GOAL; GOAL as usize];
     for (i, number) in data.iter().enumerate() {
-        previous[*number] = i;
+        previous[*number as usize] = i as u32;
     }
-    let mut last: usize = data[data.len() - 1];
-    let mut before: usize = GOAL;
-    for turn in data.len()..GOAL {
+    let mut last: u32 = data[data.len() - 1] as u32;
+    let mut before: u32 = GOAL;
+    for turn in (data.len() as u32)..GOAL {
         if before != GOAL {
             last = turn - 1 - before;
         } else {
             last = 0;
         }
-        before = previous[last];
-        previous[last] = turn;
+        before = previous[last as usize];
+        previous[last as usize] = turn;
     }
     last
 }
