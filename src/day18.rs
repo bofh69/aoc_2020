@@ -1,5 +1,4 @@
 use aoc_runner_derive::{aoc, aoc_generator};
-// use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {

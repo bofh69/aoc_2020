@@ -1,5 +1,4 @@
 use aoc_runner_derive::{aoc, aoc_generator};
-// use std::collections::HashMap;
 
 type Data = (usize, Vec<(usize, usize)>);
 

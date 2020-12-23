@@ -1,6 +1,4 @@
 use aoc_runner_derive::{aoc, aoc_generator};
-// use std::collections::HashMap;
-// use ::regex::*;
 
 #[derive(Clone, Debug)]
 pub enum Data {
