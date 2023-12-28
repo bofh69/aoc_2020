@@ -107,6 +107,83 @@ pub fn solve_part1(data: &[Data]) -> String {
 }
 
 #[aoc(day23, part2)]
-pub fn solve_part2(_data: &[Data]) -> usize {
-    0
+pub fn solve_part2(data: &[Data]) -> usize {
+    const N: usize = 1_000_000;
+    let mut prev = Vec::with_capacity(N);
+    let mut next = Vec::with_capacity(N);
+    for i in 0..N {
+        prev.push((i + N - 1) % N);
+        next.push((i + 1) % N);
+    }
+
+    // Start: 7 1 6 8 9 2 5 4 3 10 11 ... 1M
+    // 7 (9) 2 5 1 6 8 4 3 10 11
+    // 7 9 (6) 8 2 5 1 4 3 10 11
+    // 7 9 6 (1) 4 8 2 5 3 10 11
+    // 4 8 2 7 9 6 1 (5) 3 10 11
+    // 4 3 10 11 8 2 7 9 6 1 5 (12) 13 14 15
+    // 4 3 10 11 13 14 15 8 2 7 9 6 1 5 (16) 17 18 19
+    //
+    let mut current = (N + data[0] as usize - 1) % N;
+
+    next[N - 1] = current;
+    for i in 0..data.len() - 1 {
+        next[data[i] as usize - 1] = data[i + 1] as usize - 1;
+    }
+    next[data[data.len() - 1] as usize - 1] = data.len();
+
+    for i in 1..data.len() {
+        prev[data[i] as usize - 1] = data[i - 1] as usize - 1;
+    }
+    prev[data[0] as usize - 1] = N - 1;
+    prev[data.len()] = data[data.len() - 1] as usize - 1;
+
+    for _move in 0..10_000_000 {
+        let pickup1 = next[current];
+        let pickup2 = next[pickup1];
+        let pickup3 = next[pickup2];
+        let following = next[pickup3];
+        next[current] = following;
+        prev[following] = current;
+        let mut dest = (N + current - 1) % N;
+        while [pickup1, pickup2, pickup3].contains(&dest) {
+            dest = (N + dest - 1) % N;
+        }
+        let old_next = next[dest];
+        next[dest] = pickup1;
+        prev[pickup1] = dest;
+        next[pickup3] = old_next;
+        prev[old_next] = pickup3;
+        current = next[current];
+
+        /*
+        println!("After {_move} moves");
+
+        let mut pos = N-1;
+        for _i in 0..12 {
+            if next[prev[pos]] != pos {
+                println!("prev+next is invalid");
+            }
+            if prev[next[pos]] != pos {
+                println!("next+prev is invalid");
+            }
+            if pos == current {
+                print!("({:}) ", pos + 1);
+            } else {
+                print!("{:2} ", pos + 1);
+            }
+            pos = next[pos];
+        }
+        */
+
+        /*
+        for i in 0..12 {
+            let i = (N + i - 1) % N;
+            println!("{}.next = {}, prev={}", i, next[i], prev[i]);
+        }
+        */
+    }
+    println!("{} {}", next[0] + 1, next[next[0]] + 1);
+
+    (next[0] + 1) * (next[next[0]] + 1)
 }
