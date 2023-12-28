@@ -1,6 +1,4 @@
 use aoc_runner_derive::{aoc, aoc_generator};
-// use std::collections::HashSet;
-// use std::collections::VecDeque;
 
 type Data = u8;
 
@@ -108,9 +106,9 @@ pub fn solve_part1(data: &[Data]) -> String {
 
 #[aoc(day23, part2)]
 pub fn solve_part2(data: &[Data]) -> usize {
-    const N: usize = 1_000_000;
-    let mut prev = Vec::with_capacity(N);
-    let mut next = Vec::with_capacity(N);
+    const N: u32 = 1_000_000;
+    let mut prev = Vec::with_capacity(N as usize);
+    let mut next = Vec::with_capacity(N as usize);
     for i in 0..N {
         prev.push((i + N - 1) % N);
         next.push((i + 1) % N);
@@ -124,37 +122,37 @@ pub fn solve_part2(data: &[Data]) -> usize {
     // 4 3 10 11 8 2 7 9 6 1 5 (12) 13 14 15
     // 4 3 10 11 13 14 15 8 2 7 9 6 1 5 (16) 17 18 19
     //
-    let mut current = (N + data[0] as usize - 1) % N;
+    let mut current = (N + data[0] as u32 - 1) % N;
 
-    next[N - 1] = current;
+    next[N as usize - 1] = current;
     for i in 0..data.len() - 1 {
-        next[data[i] as usize - 1] = data[i + 1] as usize - 1;
+        next[data[i] as usize - 1] = data[i + 1] as u32 - 1;
     }
-    next[data[data.len() - 1] as usize - 1] = data.len();
+    next[data[data.len() - 1] as usize - 1] = data.len() as u32;
 
     for i in 1..data.len() {
-        prev[data[i] as usize - 1] = data[i - 1] as usize - 1;
+        prev[data[i] as usize - 1] = data[i - 1] as u32 - 1;
     }
     prev[data[0] as usize - 1] = N - 1;
-    prev[data.len()] = data[data.len() - 1] as usize - 1;
+    prev[data.len()] = data[data.len() - 1] as u32 - 1;
 
     for _move in 0..10_000_000 {
-        let pickup1 = next[current];
-        let pickup2 = next[pickup1];
-        let pickup3 = next[pickup2];
-        let following = next[pickup3];
-        next[current] = following;
-        prev[following] = current;
+        let pickup1 = next[current as usize];
+        let pickup2 = next[pickup1 as usize];
+        let pickup3 = next[pickup2 as usize];
+        let following = next[pickup3 as usize];
+        next[current as usize] = following;
+        prev[following as usize] = current;
         let mut dest = (N + current - 1) % N;
         while [pickup1, pickup2, pickup3].contains(&dest) {
             dest = (N + dest - 1) % N;
         }
-        let old_next = next[dest];
-        next[dest] = pickup1;
-        prev[pickup1] = dest;
-        next[pickup3] = old_next;
-        prev[old_next] = pickup3;
-        current = next[current];
+        let old_next = next[dest as usize];
+        next[dest as usize] = pickup1;
+        prev[pickup1 as usize] = dest;
+        next[pickup3 as usize] = old_next;
+        prev[old_next as usize] = pickup3;
+        current = next[current as usize];
 
         /*
         println!("After {_move} moves");
@@ -183,7 +181,7 @@ pub fn solve_part2(data: &[Data]) -> usize {
         }
         */
     }
-    println!("{} {}", next[0] + 1, next[next[0]] + 1);
+    println!("{} {}", next[0] + 1, next[next[0] as usize] + 1);
 
-    (next[0] + 1) * (next[next[0]] + 1)
+    (next[0] + 1) as usize * (next[next[0] as usize] + 1) as usize
 }
