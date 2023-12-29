@@ -26,10 +26,8 @@ fn count_neighbours(space: &HashSet<(Pos, Pos, Pos)>, coord: (Pos, Pos, Pos)) ->
         for y in -1..=1 {
             for z in -1..=1 {
                 let (x, y, z) = (x + coord.0, y + coord.1, z + coord.2);
-                if (x, y, z) != coord {
-                    if is_active(space, &(x, y, z)) {
-                        count += 1;
-                    }
+                if (x, y, z) != coord && is_active(space, &(x, y, z)) {
+                    count += 1;
                 }
             }
         }
@@ -69,10 +67,8 @@ pub fn solve_part1(data: &[Data]) -> usize {
                         if neighbours == 2 || neighbours == 3 {
                             next_state = true;
                         }
-                    } else {
-                        if neighbours == 3 {
-                            next_state = true;
-                        }
+                    } else if neighbours == 3 {
+                        next_state = true;
                     }
                     if next_state {
                         if x < new_min.0 {
@@ -113,10 +109,8 @@ fn count_neighbours2(space: &HashSet<(Pos, Pos, Pos, Pos)>, coord: (Pos, Pos, Po
             for z in -1..=1 {
                 for w in -1..=1 {
                     let (x, y, z, w) = (x + coord.0, y + coord.1, z + coord.2, w + coord.3);
-                    if (x, y, z, w) != coord {
-                        if is_active2(space, &(x, y, z, w)) {
-                            count += 1;
-                        }
+                    if (x, y, z, w) != coord && is_active2(space, &(x, y, z, w)) {
+                        count += 1;
                     }
                 }
             }
@@ -158,10 +152,8 @@ pub fn solve_part2(data: &[Data]) -> usize {
                             if neighbours == 2 || neighbours == 3 {
                                 next_state = true;
                             }
-                        } else {
-                            if neighbours == 3 {
-                                next_state = true;
-                            }
+                        } else if neighbours == 3 {
+                            next_state = true;
                         }
                         if next_state {
                             if x < new_min.0 {

@@ -35,7 +35,7 @@ pub fn solve_part2(data: &[Data]) -> u32 {
     const GOAL: u32 = 30_000_000;
     let mut previous = vec![GOAL; GOAL as usize];
     for (i, number) in data.iter().enumerate() {
-        previous[*number as usize] = i as u32;
+        previous[*number] = i as u32;
     }
     let mut last: u32 = data[data.len() - 1] as u32;
     let mut before: u32 = GOAL;

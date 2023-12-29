@@ -21,7 +21,7 @@ pub fn input_generator(input: &str) -> Data {
 
             // bright yellow bags contain no other bags.
             if rest != "no other bags." {
-                let rest = rest.replace(".", "").replace("bags", "").replace("bag", "");
+                let rest = rest.replace('.', "").replace("bags", "").replace("bag", "");
                 contains = rest
                     .split(", ")
                     .map(|bag| {
@@ -37,12 +37,12 @@ pub fn input_generator(input: &str) -> Data {
         .collect()
 }
 
-fn dfs(from: &str, data: &Data, goal: &str, cache: &mut HashMap<String, bool>) -> bool {
+fn dfs(from: &str, data: &Data, cache: &mut HashMap<String, bool>) -> bool {
     if let Some(&result) = cache.get(from) {
         return result;
     }
     for (_n, child) in &data[from] {
-        if dfs(&child, data, goal, cache) {
+        if dfs(child, data, cache) {
             cache.insert(from.into(), true);
             return true;
         }
@@ -58,7 +58,7 @@ pub fn solve_part1(data: &Data) -> u32 {
     cache.insert(GOAL.into(), true);
     let mut count = 0;
     for key in data.keys() {
-        if key != GOAL && dfs(key, data, GOAL, &mut cache) {
+        if key != GOAL && dfs(key, data, &mut cache) {
             count += 1;
         }
     }
@@ -72,7 +72,7 @@ fn count_children(from_bag: &str, data: &Data, cache: &mut HashMap<String, usize
     }
     let mut children = 1;
     for (n, child) in &data[from_bag] {
-        children += n * count_children(&child, data, cache);
+        children += n * count_children(child, data, cache);
     }
     cache.insert(from_bag.into(), children);
     children

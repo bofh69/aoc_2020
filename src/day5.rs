@@ -40,8 +40,6 @@ pub fn solve_part2(data: &[Data]) -> Data {
         tmp
     };
 
-    (min..(1 << 10))
-        .filter(|i| !data.contains(&i))
-        .next()
+    (min..(1 << 10)).find(|i| !data.contains(&i))
         .unwrap()
 }

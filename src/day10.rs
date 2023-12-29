@@ -11,7 +11,7 @@ pub fn input_generator(input: &str) -> Vec<Data> {
 #[aoc(day10, part1)]
 pub fn solve_part1(data: &[Data]) -> Data {
     // Sort the data, count the differences.
-    let mut data: Vec<_> = data.iter().copied().collect();
+    let mut data: Vec<_> = data.to_vec();
     data.sort_unstable();
     data.push(data[data.len() - 1] + 3);
 
@@ -56,7 +56,7 @@ fn count_permutations(pos: usize, data: &[Data], cache: &mut [Data]) -> Data {
 
 #[aoc(day10, part2)]
 pub fn solve_part2(data: &[Data]) -> Data {
-    let mut data: Vec<_> = data.iter().copied().collect();
+    let mut data: Vec<_> = data.to_vec();
     data.push(0); // The wall's jolt.
     data.sort_unstable();
     data.push(data[data.len() - 1] + 3); // The needed jolt.

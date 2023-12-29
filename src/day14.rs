@@ -12,8 +12,8 @@ pub fn input_generator(input: &str) -> Vec<Data> {
         .lines()
         .map(|line| {
             if let Some(line) = line.strip_prefix("mask = ") {
-                let zeros = u64::from_str_radix(&line.replace("X", "0"), 2).unwrap();
-                let ones = u64::from_str_radix(&line.replace("X", "1"), 2).unwrap();
+                let zeros = u64::from_str_radix(&line.replace('X', "0"), 2).unwrap();
+                let ones = u64::from_str_radix(&line.replace('X', "1"), 2).unwrap();
                 Data::Mask(zeros, ones)
             } else if let Some(line) = line.strip_prefix("mem[") {
                 let mut iter = line.split("] = ");
@@ -42,8 +42,8 @@ pub fn solve_part1(data: &[Data]) -> u64 {
             }
             Data::Mem(addr, val) => {
                 let mut val = *val;
-                val = val & ones;
-                val = val | zeros;
+                val &= ones;
+                val |= zeros;
                 mem.insert(addr, val);
             }
         }
@@ -76,7 +76,7 @@ pub fn solve_part2(data: &[Data]) -> u64 {
             }
             Data::Mem(addr, val) => {
                 let mut addr = *addr;
-                addr = addr | bits;
+                addr |= bits;
                 // How many bits are floating?
                 let n_mask_bits = mask_bit_pos.len();
                 // i counts through the number of possible floating values
@@ -84,7 +84,7 @@ pub fn solve_part2(data: &[Data]) -> u64 {
                     let mut addr2 = addr;
                     // j counts over each floating bit to set/clear.
                     for j in 0..n_mask_bits {
-                        let bit = 1 << mask_bit_pos[j as usize];
+                        let bit = 1 << mask_bit_pos[j];
                         // If the bit is set in i, set the right floating point else clear it.
                         addr2 = if i & (1 << j) != 0 {
                             addr2 | bit

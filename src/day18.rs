@@ -14,25 +14,25 @@ fn tokenize(line: &[char]) -> Vec<Token> {
 
     let mut result = Vec::new();
 
-    while line.len() > 0 {
-        while line.len() > 0 && line[0] == ' ' {
+    while !line.is_empty() {
+        while !line.is_empty() && line[0] == ' ' {
             line = &line[1..];
         }
-        if line.len() > 0 && line[0] == '+' {
+        if !line.is_empty() && line[0] == '+' {
             line = &line[1..];
             result.push(Token::Add);
-        } else if line.len() > 0 && line[0] == '*' {
+        } else if !line.is_empty() && line[0] == '*' {
             line = &line[1..];
             result.push(Token::Mul);
-        } else if line.len() > 0 && line[0] == '(' {
+        } else if !line.is_empty() && line[0] == '(' {
             line = &line[1..];
             result.push(Token::LPar);
-        } else if line.len() > 0 && line[0] == ')' {
+        } else if !line.is_empty() && line[0] == ')' {
             line = &line[1..];
             result.push(Token::RPar);
-        } else if line.len() > 0 && line[0].is_ascii_digit() {
+        } else if !line.is_empty() && line[0].is_ascii_digit() {
             let mut num = 0_i64;
-            while line.len() > 0 && line[0].is_ascii_digit() {
+            while !line.is_empty() && line[0].is_ascii_digit() {
                 num = num * 10 + line[0].to_digit(10).unwrap() as i64;
                 line = &line[1..];
             }
@@ -48,14 +48,17 @@ type Data = Vec<Token>;
 
 #[aoc_generator(day18)]
 pub fn input_generator(input: &str) -> Vec<Data> {
-    input.lines().map(|line| {
-        let line : Vec<_> = line.chars().collect();
-        tokenize(&line)
-    }).collect()
+    input
+        .lines()
+        .map(|line| {
+            let line: Vec<_> = line.chars().collect();
+            tokenize(&line)
+        })
+        .collect()
 }
 
 fn calc(tokens: &[Token]) -> i64 {
-    let mut tokens : Vec<_> = tokens.into();
+    let mut tokens: Vec<_> = tokens.into();
     loop {
         let mut start = None;
         'tokens: for i in 0..tokens.len() {
@@ -63,7 +66,7 @@ fn calc(tokens: &[Token]) -> i64 {
                 start = Some(i);
             } else if tokens[i] == Token::RPar {
                 let start = start.unwrap();
-                let val = calc_span(&tokens[start+1 .. i]);
+                let val = calc_span(&tokens[start + 1..i]);
                 tokens.splice(start..=i, Some(Token::Num(val)));
                 break 'tokens;
             }
@@ -78,7 +81,7 @@ fn calc(tokens: &[Token]) -> i64 {
 fn calc_span(tokens: &[Token]) -> i64 {
     let mut tokens = tokens;
     let mut acc = -1;
-    while tokens.len() > 0 {
+    while !tokens.is_empty() {
         match tokens[0] {
             Token::Num(n) => {
                 acc = n;
@@ -112,16 +115,16 @@ pub fn solve_part1(data: &[Data]) -> i64 {
 }
 
 fn calc2(tokens: &[Token]) -> i64 {
-    let mut tokens : Vec<_> = tokens.into();
+    let mut tokens: Vec<_> = tokens.into();
     loop {
         let mut any = false;
         let mut start = None;
         'tokens: for i in 0..tokens.len() {
             if tokens.len() > i + 2 {
                 if let Token::Num(n) = tokens[i] {
-                    if let Token::Num(n2) = tokens[i+2] {
-                        if tokens[i+1] == Token::Add {
-                            tokens.splice(i..=i+2, Some(Token::Num(n + n2)));
+                    if let Token::Num(n2) = tokens[i + 2] {
+                        if tokens[i + 1] == Token::Add {
+                            tokens.splice(i..=i + 2, Some(Token::Num(n + n2)));
                             any = true;
                             break 'tokens;
                         }
@@ -132,7 +135,7 @@ fn calc2(tokens: &[Token]) -> i64 {
                 start = Some(i);
             } else if tokens[i] == Token::RPar {
                 let start = start.unwrap();
-                let val = calc_span2(&tokens[start+1 .. i]);
+                let val = calc_span2(&tokens[start + 1..i]);
                 tokens.splice(start..=i, Some(Token::Num(val)));
                 any = true;
                 break 'tokens;
@@ -148,7 +151,7 @@ fn calc2(tokens: &[Token]) -> i64 {
 fn calc_span2(tokens: &[Token]) -> i64 {
     let mut tokens = tokens;
     let mut acc = -1;
-    while tokens.len() > 0 {
+    while !tokens.is_empty() {
         match tokens[0] {
             Token::Num(n) => {
                 acc = n;

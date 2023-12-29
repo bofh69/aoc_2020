@@ -148,9 +148,7 @@ pub fn input_generator(input: &str) -> Vec<Tile> {
             let mut iter = tile.lines();
             let num = iter.next().unwrap();
             let num = num
-                .split(' ')
-                .skip(1)
-                .next()
+                .split(' ').nth(1)
                 .unwrap()
                 .split(':')
                 .next()
@@ -172,13 +170,12 @@ pub fn input_generator(input: &str) -> Vec<Tile> {
 
 fn create_tiles_from_data(data: &[Tile]) -> HashMap<(TileNum, Rotation), SideValues> {
     data.iter()
-        .map(|t| {
+        .flat_map(|t| {
             let sv = SideValues::from(t);
             (0..8)
                 .map(|n| ((t.num, Rotation(n)), sv.get_rotation(n)))
                 .collect::<Vec<_>>()
         })
-        .flatten()
         .collect()
 }
 
@@ -187,25 +184,25 @@ fn create_sideview_to_tilenum(
 ) -> HashMap<SideValue, Vec<(TileNum, Rotation)>> {
     let mut sv_to_tn: HashMap<SideValue, Vec<(TileNum, Rotation)>> = HashMap::new();
     for (tr, sv) in tiles {
-        let list = sv_to_tn.entry(sv.up).or_insert_with(|| Default::default());
+        let list = sv_to_tn.entry(sv.up).or_default();
         if !list.contains(tr) {
             list.push(*tr);
         }
         let list = sv_to_tn
             .entry(sv.down)
-            .or_insert_with(|| Default::default());
+            .or_default();
         if !list.contains(tr) {
             list.push(*tr);
         }
         let list = sv_to_tn
             .entry(sv.left)
-            .or_insert_with(|| Default::default());
+            .or_default();
         if !list.contains(tr) {
             list.push(*tr);
         }
         let list = sv_to_tn
             .entry(sv.right)
-            .or_insert_with(|| Default::default());
+            .or_default();
         if !list.contains(tr) {
             list.push(*tr);
         }
@@ -361,7 +358,7 @@ pub fn solve_part2(data: &[Tile]) -> usize {
 
     // Find first corner:
     for (tr, pn) in &tn_to_pn {
-        if pn.up.len() == 0 && pn.left.len() == 0 {
+        if pn.up.is_empty() && pn.left.is_empty() {
             tile_map[0] = Some(*tr);
             break;
         }
@@ -381,7 +378,7 @@ pub fn solve_part2(data: &[Tile]) -> usize {
             let next_sv = tiles.get(next_tr).expect("Exists").left;
             if last_sv == next_sv && !used_tiles.contains(&next_tr.0) {
                 let pn = tn_to_pn.get(next_tr).expect("exists");
-                if pn.up.len() == 0 && pn.down.len() > 0 {
+                if pn.up.is_empty() && !pn.down.is_empty() {
                     used_tiles.insert(next_tr.0);
                     tile_map[x] = Some(*next_tr);
                     last_tile_and_rot = *next_tr;
@@ -402,13 +399,11 @@ pub fn solve_part2(data: &[Tile]) -> usize {
                     continue;
                 }
                 let pn = tn_to_pn.get(next_tr).expect("exists");
-                if x == 0 && pn.left.len() != 0 {
-                    continue;
-                } else if x == width - 1 && pn.right.len() != 0 {
-                    continue;
-                } else if x > 0 && x < width - 1 && (pn.left.len() == 0 || pn.right.len() == 0) {
-                    continue;
-                } else if y == width - 1 && pn.down.len() != 0 {
+                if (x == 0 && !pn.left.is_empty())
+                    || (x == width - 1 && !pn.right.is_empty())
+                    || (x > 0 && x < width - 1 && (pn.left.is_empty() || pn.right.is_empty()))
+                    || (y == width - 1 && !pn.down.is_empty())
+                {
                     continue;
                 }
                 used_tiles.insert(next_tr.0);

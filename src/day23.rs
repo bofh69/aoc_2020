@@ -79,9 +79,7 @@ fn print_cups(cups: &[u8], pos: usize) {
 #[aoc(day23, part1)]
 pub fn solve_part1(data: &[Data]) -> String {
     let mut cups = [[0_u8; 9]; 2];
-    for i in 0..9 {
-        cups[0][i] = data[i];
-    }
+    cups[0][..9].copy_from_slice(&data[..9]);
     let mut idx = 0;
     let mut pos = 0;
     for i in 0..100 {

@@ -56,8 +56,12 @@ pub fn solve_part1(data: &[Data]) -> usize {
     for alergen in &alergens {
         let mut possible_ingreds = ingreds.clone();
         for food in data {
-            if food.alergen.contains(&alergen) {
-                possible_ingreds = possible_ingreds.iter().filter(|i| food.ingred.contains(i)).map(|s| s.to_string()).collect();
+            if food.alergen.contains(alergen) {
+                possible_ingreds = possible_ingreds
+                    .iter()
+                    .filter(|i| food.ingred.contains(i))
+                    .map(|s| s.to_string())
+                    .collect();
             }
         }
         for (ingred, alergens) in &mut ingred_to_pos_alergens {
@@ -70,8 +74,14 @@ pub fn solve_part1(data: &[Data]) -> usize {
     loop {
         let mut any_change = false;
         for ingred in &ingreds {
-            if {ingred_to_pos_alergens[ingred].len()} == 1 {
-                let alergen = { ingred_to_pos_alergens[ingred].iter().next().unwrap().clone() };
+            if { ingred_to_pos_alergens[ingred].len() } == 1 {
+                let alergen = {
+                    ingred_to_pos_alergens[ingred]
+                        .iter()
+                        .next()
+                        .unwrap()
+                        .clone()
+                };
                 // Only one alergen, remove it from all other ingreds.
                 for (ingred2, alergens) in &mut ingred_to_pos_alergens {
                     if *ingred2 != ingred && alergens.contains(&alergen) {
@@ -86,13 +96,17 @@ pub fn solve_part1(data: &[Data]) -> usize {
         }
     }
 
-    let safe_ingreds : HashSet<_> = ingred_to_pos_alergens.iter().filter(|(_i, a)| a.len() == 0).map(|(i, _a)| i).collect();
+    let safe_ingreds: HashSet<_> = ingred_to_pos_alergens
+        .iter()
+        .filter(|(_i, a)| a.is_empty())
+        .map(|(i, _a)| i)
+        .collect();
 
     let mut count = 0;
     for food in data {
         for ingred in &safe_ingreds {
             if food.ingred.contains(ingred) {
-                count = count + 1;
+                count += 1;
             }
         }
     }
@@ -123,8 +137,12 @@ pub fn solve_part2(data: &[Data]) -> String {
     for alergen in &alergens {
         let mut possible_ingreds = ingreds.clone();
         for food in data {
-            if food.alergen.contains(&alergen) {
-                possible_ingreds = possible_ingreds.iter().filter(|i| food.ingred.contains(i)).map(|s| s.to_string()).collect();
+            if food.alergen.contains(alergen) {
+                possible_ingreds = possible_ingreds
+                    .iter()
+                    .filter(|i| food.ingred.contains(i))
+                    .map(|s| s.to_string())
+                    .collect();
             }
         }
         for (ingred, alergens) in &mut ingred_to_pos_alergens {
@@ -137,8 +155,14 @@ pub fn solve_part2(data: &[Data]) -> String {
     loop {
         let mut any_change = false;
         for ingred in &ingreds {
-            if {ingred_to_pos_alergens[ingred].len()} == 1 {
-                let alergen = { ingred_to_pos_alergens[ingred].iter().next().unwrap().clone() };
+            if { ingred_to_pos_alergens[ingred].len() } == 1 {
+                let alergen = {
+                    ingred_to_pos_alergens[ingred]
+                        .iter()
+                        .next()
+                        .unwrap()
+                        .clone()
+                };
                 // Only one alergen, remove it from all other ingreds.
                 for (ingred2, alergens) in &mut ingred_to_pos_alergens {
                     if *ingred2 != ingred && alergens.contains(&alergen) {
@@ -153,10 +177,12 @@ pub fn solve_part2(data: &[Data]) -> String {
         }
     }
 
-    let mut tmp : Vec<(&str, &str)> = 
-    ingred_to_pos_alergens.iter().filter(|(_i, a)| a.len() == 1)
-        .map(|(i, a)| (i.as_str(), a.iter().next().unwrap().as_str())).collect();
-    tmp.sort_by_key(|(_i, a)| a.clone());
-    let s : Vec<_> = tmp.iter().map(|(i, _a)| *i).collect();
+    let mut tmp: Vec<(&str, &str)> = ingred_to_pos_alergens
+        .iter()
+        .filter(|(_i, a)| a.len() == 1)
+        .map(|(i, a)| (i.as_str(), a.iter().next().unwrap().as_str()))
+        .collect();
+    tmp.sort_by_key(|(_i, a)| *a);
+    let s: Vec<_> = tmp.iter().map(|(i, _a)| *i).collect();
     s.join(",")
 }

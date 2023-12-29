@@ -100,10 +100,7 @@ pub fn solve_part2(data: &Data) -> usize {
         .nearby_tickets
         .iter()
         .filter(|nt| {
-            !nt.iter()
-                .filter(|n| !valid_numbers.contains(n))
-                .next()
-                .is_some()
+            !nt.iter().any(|n| !valid_numbers.contains(n))
         })
         .collect();
 
@@ -125,10 +122,8 @@ pub fn solve_part2(data: &Data) -> usize {
             if all_rules[field].len() == 1 {
                 let rule = *all_rules[field].iter().next().unwrap();
                 for i in 0..all_rules.len() {
-                    if i != field {
-                        if all_rules[i].remove(&rule) {
-                            removed_any = true;
-                        }
+                    if i != field && all_rules[i].remove(&rule) {
+                        removed_any = true;
                     }
                 }
             }
@@ -153,7 +148,7 @@ pub fn solve_part2(data: &Data) -> usize {
         .filter(|(_n, v)| v.0.starts_with("departure"))
         .map(|(r, s)| {
             dbg!(r, s, all_rules[&r]);
-            dbg!(data.ticket[*all_rules[&r] as usize] as usize)
+            dbg!(data.ticket[*all_rules[&r]] as usize)
         })
         .product()
 }

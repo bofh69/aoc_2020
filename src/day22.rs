@@ -53,7 +53,7 @@ pub fn solve_part1(data: &Data) -> usize {
     } else {
         &mut decks[1]
     };
-    calc_score(&deck)
+    calc_score(deck)
 }
 
 fn round(decks: &mut [VecDeque<u8>; 2], old_states: &mut HashSet<[Vec<u8>; 2]>) -> (bool, usize) {
